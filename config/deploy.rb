@@ -9,18 +9,33 @@ set :repo_url, 'git@github.com:Ericean/deploy_test.git'
 
 # Default deploy_to directory is /var/www/my_app_name
 set :deploy_to, '/home/deploy/deploy_test'
-set :linked_files, %w{config/database.yml}
-set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 
-namespace :setup do
-  desc 'Uploading config files to server'
-  task :upload_config do
-    on roles(:all) do
-      execute :mkdir, "-p #{shared_path}"
-      ['shared/config', 'shared/run'].each do |f|
-        upload!(f, shared_path, recursive: true)
+
+set :linked_dirs, fetch(:linked_dirs, []).push('bin', 'log', 'tmp/pids', 'tmp/cache', 'tmp/sockets', 'vendor/bundle', 'public/system')
+set :linked_dirs, fetch(:linked_dirs) + %w{public/uploads}
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
+
+set :config_dirs, %W{config config/environments/#{fetch(:stage)} public/uploads}
+set :config_files, %w{config/database.yml config/secrets.yml}
+
+namespace :deploy do
+  desc 'Copy files from application to shared directory'
+  ## copy the files to the shared directories
+  task :config do
+    on roles(:app) do
+      # create dirs
+      fetch(:config_dirs).each do |dirname|
+        path = File.join shared_path, dirname
+        execute "mkdir -p #{path}"
       end
+
+      # copy config files
+      fetch(:config_files).each do |filename|
+        remote_path = File.join shared_path, filename
+        upload! filename, remote_path
+      end
+
     end
   end
 end
