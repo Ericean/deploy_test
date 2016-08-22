@@ -12,6 +12,19 @@ set :deploy_to, '/home/deploy/deploy_test'
 set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
+
+namespace :setup do
+  desc 'Uploading config files to server'
+  task :upload_config do
+    on roles(:all) do
+      execute :mkdir, "-p #{shared_path}"
+      ['shared/config', 'shared/run'].each do |f|
+        upload!(f, shared_path, recursive: true)
+      end
+    end
+  end
+end
+
 namespace :deploy do
 
   desc 'Restart application'
