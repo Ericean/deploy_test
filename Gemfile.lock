@@ -186,6 +186,7 @@ PLATFORMS
 DEPENDENCIES
   byebug
   capistrano (~> 3.6)
+  capistrano-bundler (~> 1.1.2)
   capistrano-rails (~> 1.1, >= 1.1.7)
   capistrano-rbenv!
   coffee-rails (~> 4.2)
