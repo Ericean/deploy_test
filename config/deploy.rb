@@ -8,7 +8,7 @@ set :repo_url, 'git@github.com:Ericean/deploy_test.git'
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
-set :deploy_to, '/home/deploy/test'
+set :deploy_to, '/home/deploy/deploy_test'
 set :linked_files, %w{config/database.yml}
 set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
